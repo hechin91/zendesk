@@ -77,6 +77,19 @@ def parse_json(session, outfile_path=None):
         data.to_csv(outfile_path, sep="\t")
     return data
 
+def display_tickets(data, chunk_size):
+    data = (data[['id', 'submitter_id', 'assignee_id', 'created_at', 'subject', 'status']])
+    # paginate through chunks (one-way only!)
+    chunk_start = 0
+    chunk_end = chunk_size
+    while chunk_end < data.shape[0] + 1:
+        pydoc.pager(data.iloc[chunk_start:chunk_end].to_string())
+        chunk_start += chunk_size
+        chunk_end += chunk_size
+
+def display_single_ticket(data, row):
+    print(data.iloc[row])
+
 def load_data():
     parser = argparse.ArgumentParser()
     parser.add_argument('credentials', type=str,
