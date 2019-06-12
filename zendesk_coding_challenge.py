@@ -80,12 +80,16 @@ def parse_json(session, outfile_path=None):
 def display_tickets(data, chunk_size):
     data = (data[['id', 'submitter_id', 'assignee_id', 'created_at', 'subject', 'status']])
     # paginate through chunks (one-way only!)
+    if chunk_size < 1:
+        raise Exception("Chunk size provided must be greater than 0!")
+
     chunk_start = 0
     chunk_end = chunk_size
     while chunk_end < data.shape[0] + 1:
         pydoc.pager(data.iloc[chunk_start:chunk_end].to_string())
         chunk_start += chunk_size
         chunk_end += chunk_size
+    return data.shape[0], chunk_start, chunk_end
 
 def display_single_ticket(data, row):
     print(data.iloc[row])
