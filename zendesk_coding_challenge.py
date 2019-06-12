@@ -111,3 +111,47 @@ def load_data():
     # get json and parse json, write to outfile
     data = parse_json(session, args.outfile_path)
     return data, args.chunk_size
+
+def interactive_menu(data, chunk_size):
+    chunk_size = chunk_size
+    while True:
+        print()
+        choice = input("""
+WELCOME TO THE ZENDESK TICKET VIEWER
+
+
+    (1) Display Tickets
+    (2) Display Individual Tickets
+    (3) Exit
+
+
+    Please enter an option: """)
+
+        if choice == "1":
+            display_tickets(data, chunk_size)
+
+        elif choice == "2":
+            while True:
+                ticket_number = input('\nPlease only enter a ticket number or type MENU to go back: ')
+                if ticket_number == "MENU" or ticket_number == "menu":
+                    interactive_menu(data, chunk_size)
+                try:
+                    ticket_number = int(ticket_number)
+                    print("\nObtaining ticket number: ", ticket_number, "\n")
+                    display_single_ticket(data, ticket_number)
+                except:
+                    print("\nThat's not a valid ticket number!")
+
+        elif choice == "3":
+            print("\nShutting down. Thank you and goodbye!\n")
+            sys.exit()
+        else:
+            print("You must only select menu options.")
+            print("Please try again!\n")
+
+def main():
+    data, chunk_size = load_data()
+    interactive_menu(data, chunk_size)
+
+if __name__ == "__main__":
+    main()
