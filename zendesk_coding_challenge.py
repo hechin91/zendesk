@@ -8,6 +8,7 @@ import argparse
 import requests
 import pandas as pd
 from pandas.io.json import json_normalize
+pd.set_option('display.max_colwidth', -1)
 
 def get_credentials(infile_path):
     """
@@ -57,3 +58,25 @@ def get_from_api(url, user=None, token=None, password=None, user_password=None, 
             return requests.get(url, headers=headers)
     else:
         raise Exception('Please specify user if not providing user:password combination')
+
+def load_data():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('credentials', type=str,
+                        help='File containing user:password combination')
+    parser.add_argument('--chunk-size', default=25, type=int,
+                        help='Display this many tickets per page (DEFAULT 25)')
+    parser.add_argument('--outfile-path', default=None, type=str,
+                        help='Write json data to tab separated file')
+
+    args = parser.parse_args()
+
+    # authentication credentials from file
+    credentials_utf8 = get_credentials(args.credentials)
+
+    # do the API call
+    url = 'https://henrychin.zendesk.com/api/v2/tickets.json'
+    session = get_from_api(url, user_password=credentials_utf8)
+
+    # get json and parse json, write to outfile
+    data = parse_json(session, args.outfile_path)
+    return data, args.chunk_size
