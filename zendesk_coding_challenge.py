@@ -59,6 +59,24 @@ def get_from_api(url, user=None, token=None, password=None, user_password=None, 
     else:
         raise Exception('Please specify user if not providing user:password combination')
 
+def parse_json(session, outfile_path=None):
+    """
+    Takes a http session as input, returns pandas dataframe
+
+    Arguments:
+        session - http session
+        outfile_path (OPTIONAL) - path to tsv file
+    """
+    data = session.json()
+    data = json.dumps(data)
+    data = pd.read_json(data)
+    data = json_normalize(data=data['tickets'])
+    data = (data[['id', 'external_id', 'submitter_id', 'assignee_id' ,'url', 'priority',
+     'created_at', 'updated_at', 'subject', 'description', 'tags', 'status']])
+    if outfile_path:
+        data.to_csv(outfile_path, sep="\t")
+    return data
+
 def load_data():
     parser = argparse.ArgumentParser()
     parser.add_argument('credentials', type=str,
