@@ -1,2 +1,2 @@
-# zendesk
+# Zendesk Ticket Viewer
 Internship
