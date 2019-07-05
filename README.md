@@ -17,7 +17,6 @@ The full environment in which this script was run is provided below this readme 
 $ python3 zendesk_coding_challenge.py credentials.txt
 ```
 ## Further Notes
-Although I am familiar with Java, I took this opportunity to learn Python after consulation with my peers as I judge it to be the most suitable language for this specific task.
 
 Full environment: 
 ```
